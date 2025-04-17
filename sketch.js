@@ -8,7 +8,7 @@ let poemLines = [
     "Two sons raised with love so true,",
     "Nick and Chris, strong and new.",
     "Krupa and Shalini, hearts aligned,",
-    "Five grandchildren, blessings combined.",
+    "Four grandchildren, blessings combined.",
     "Mason, Owen, Shriya, Vishal,",
     "A family tree that stands so tall."
 ];
@@ -216,9 +216,19 @@ class FamilyParticle {
         this.label = label;
         this.type = type;
         this.angle = 0;
+        // Add padding around the icon
+        this.backgroundSize = this.size * 1.5;
     }
     
     display() {
+        // Draw white background circle
+        push();
+        noStroke();
+        fill(255); // White
+        ellipse(this.x, this.y, this.backgroundSize, this.backgroundSize);
+        pop();
+        
+        // Draw the icon
         if (this.type === 'couple') {
             drawCouple(this.x, this.y, this.size);
         } else if (this.type === 'man') {
@@ -232,7 +242,7 @@ class FamilyParticle {
         textAlign(CENTER);
         textSize(12);
         fill(colors.text[0], colors.text[1], colors.text[2]);
-        text(this.label, this.x, this.y + this.size + 15);
+        text(this.label, this.x, this.y + this.backgroundSize/2 + 15);
         pop();
     }
 } 
