@@ -21,9 +21,15 @@ const colors = {
     daughters: [0, 0, 0],      // Black
     grandchildren: [0, 0, 0],  // Black
     text: [30, 30, 50],        // Muted brown
-    particle1: [340, 30, 90],  // Soft pink
-    particle2: [60, 30, 90],   // Soft yellow
-    particle3: [180, 30, 90]   // Soft blue
+    // Flower colors in HSB
+    flower1: [330, 60, 95],    // Pink
+    flower2: [280, 50, 95],    // Purple
+    flower3: [180, 50, 95],    // Turquoise
+    flower4: [50, 60, 95],     // Yellow
+    // Bird colors in HSB
+    bird1: [30, 50, 90],       // Warm brown
+    bird2: [200, 50, 95],      // Sky blue
+    bird3: [150, 50, 90]       // Sage green
 };
 
 function setup() {
@@ -113,6 +119,48 @@ function drawFamilyConnections() {
     }
 }
 
+function drawFlower(x, y, size, hue, sat, bright, alpha) {
+    push();
+    translate(x, y);
+    noStroke();
+    
+    // Petals
+    for (let i = 0; i < 5; i++) {
+        fill(hue, sat, bright, alpha);
+        rotate(TWO_PI / 5);
+        ellipse(0, -size/2, size/1.5, size/3);
+    }
+    
+    // Center
+    fill(hue, sat * 1.2, bright * 0.9, alpha);
+    ellipse(0, 0, size/2, size/2);
+    pop();
+}
+
+function drawBird(x, y, size, hue, sat, bright, alpha) {
+    push();
+    translate(x, y);
+    
+    // Body
+    fill(hue, sat, bright, alpha);
+    noStroke();
+    ellipse(0, 0, size, size/1.5);
+    
+    // Wing
+    fill(hue, sat * 1.2, bright * 0.9, alpha);
+    ellipse(size/4, -size/8, size/2, size/3);
+    
+    // Head
+    fill(hue, sat, bright, alpha);
+    ellipse(-size/3, -size/4, size/2, size/2);
+    
+    // Beak
+    fill(hue, sat * 0.8, bright * 0.7, alpha);
+    triangle(-size/2, -size/4, -size/2 - size/4, -size/4, -size/2, -size/8);
+    
+    pop();
+}
+
 class Particle {
     constructor() {
         this.reset();
@@ -121,11 +169,24 @@ class Particle {
     reset() {
         this.x = random(width);
         this.y = random(height);
-        this.size = random(5, 15);
+        this.size = random(8, 20);
         this.speed = random(0.5, 2);
         this.angle = random(TWO_PI);
-        this.hue = random([colors.particle1[0], colors.particle2[0], colors.particle3[0]]);
-        this.alpha = random(0.3, 0.8);
+        this.type = random() < 0.5 ? 'flower' : 'bird';
+        
+        // Randomly select color based on type
+        if (this.type === 'flower') {
+            let flowerColor = random([colors.flower1, colors.flower2, colors.flower3, colors.flower4]);
+            this.hue = flowerColor[0];
+            this.sat = flowerColor[1];
+            this.bright = flowerColor[2];
+        } else {
+            let birdColor = random([colors.bird1, colors.bird2, colors.bird3]);
+            this.hue = birdColor[0];
+            this.sat = birdColor[1];
+            this.bright = birdColor[2];
+        }
+        this.alpha = random(0.4, 0.8);
     }
     
     update() {
@@ -139,9 +200,11 @@ class Particle {
     }
     
     display() {
-        noStroke();
-        fill(this.hue, 30, 90, this.alpha);
-        ellipse(this.x, this.y, this.size);
+        if (this.type === 'flower') {
+            drawFlower(this.x, this.y, this.size, this.hue, this.sat, this.bright, this.alpha);
+        } else {
+            drawBird(this.x, this.y, this.size, this.hue, this.sat, this.bright, this.alpha);
+        }
     }
 }
 
