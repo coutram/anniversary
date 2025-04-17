@@ -24,6 +24,7 @@ const colors = {
     man: [210, 70, 90],         // Blue
     woman: [330, 70, 90],       // Pink
     text: [30, 30, 50],         // Muted brown
+    gold: [45, 70, 90],         // Golden color
     // Flower colors in HSB
     flower1: [330, 60, 95],     // Pink
     flower2: [280, 50, 95],     // Purple
@@ -35,6 +36,8 @@ const colors = {
     bird3: [150, 50, 90]        // Sage green
 };
 
+let heartParticles = [];
+
 function setup() {
     createCanvas(800, 800);
     colorMode(HSB, 360, 100, 100, 1);
@@ -42,6 +45,11 @@ function setup() {
     // Create initial particles
     for (let i = 0; i < 50; i++) {
         particles.push(new Particle());
+    }
+    
+    // Create heart particles
+    for (let i = 0; i < 15; i++) {
+        heartParticles.push(new HeartParticle());
     }
     
     // Create family particles with smaller sizes
@@ -62,19 +70,32 @@ function setup() {
 function draw() {
     background(colors.background[0], colors.background[1], colors.background[2]);
     
+    // Draw golden frame
+    drawFrame();
+    
     // Update and display background particles
     for (let particle of particles) {
         particle.update();
         particle.display();
     }
     
+    // Update and display heart particles
+    for (let heart of heartParticles) {
+        heart.update();
+        heart.display();
+    }
+    
     // Draw connecting lines between family members
     drawFamilyConnections();
     
-    // Display family particles
+    // Display family particles with breathing animation
+    let breathingScale = 1 + sin(frameCount * 0.02) * 0.03;
     for (let particle of familyParticles) {
-        particle.display();
+        particle.display(breathingScale);
     }
+    
+    // Draw anniversary text
+    drawAnniversaryText();
     
     // Draw poem
     drawPoem();
@@ -95,6 +116,35 @@ function draw() {
         }
         cursor(overParticle ? 'grab' : 'default');
     }
+}
+
+function drawFrame() {
+    push();
+    noFill();
+    strokeWeight(15);
+    let frameGlow = 0.6 + sin(frameCount * 0.02) * 0.2;
+    stroke(colors.gold[0], colors.gold[1], colors.gold[2], frameGlow);
+    rect(20, 20, width - 40, height - 40, 20);
+    
+    // Inner frame
+    strokeWeight(2);
+    stroke(colors.gold[0], colors.gold[1], colors.gold[2], frameGlow * 0.8);
+    rect(35, 35, width - 70, height - 70, 15);
+    pop();
+}
+
+function drawAnniversaryText() {
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(32);
+    let textGlow = 0.7 + sin(frameCount * 0.03) * 0.3;
+    fill(colors.gold[0], colors.gold[1], colors.gold[2], textGlow);
+    text("50 Years of Love", width/2, 80);
+    
+    textSize(20);
+    fill(colors.gold[0], colors.gold[1], colors.gold[2], textGlow * 0.8);
+    text("Cecil & Indranie", width/2, 120);
+    pop();
 }
 
 function drawPoem() {
@@ -301,29 +351,38 @@ class FamilyParticle {
         this.backgroundSize = this.size * 1.8;
     }
     
-    display() {
-        // Draw white background circle with HSB values
+    display(scale = 1) {
+        // Draw white background circle with subtle glow
         push();
         noStroke();
-        fill(0, 0, 100, 1); // Pure white in HSB (hue=0, saturation=0, brightness=100, alpha=1)
-        ellipse(this.x, this.y, this.backgroundSize, this.backgroundSize);
+        fill(0, 0, 100, 1);
+        ellipse(this.x, this.y, this.backgroundSize * scale, this.backgroundSize * scale);
+        
+        // Add subtle glow
+        for(let i = 3; i > 0; i--) {
+            fill(0, 0, 100, 0.1);
+            ellipse(this.x, this.y, (this.backgroundSize + i*5) * scale, (this.backgroundSize + i*5) * scale);
+        }
         pop();
         
-        // Draw the icon
+        // Draw the icon with scaling
+        push();
+        scale(scale);
         if (this.type === 'couple') {
-            drawCouple(this.x, this.y, this.size);
+            drawCouple(this.x/scale, this.y/scale, this.size);
         } else if (this.type === 'man') {
-            drawMan(this.x, this.y, this.size);
+            drawMan(this.x/scale, this.y/scale, this.size);
         } else if (this.type === 'woman') {
-            drawWoman(this.x, this.y, this.size);
+            drawWoman(this.x/scale, this.y/scale, this.size);
         }
+        pop();
         
         // Draw label
         push();
         textAlign(CENTER);
-        textSize(12);
+        textSize(12 * scale);
         fill(colors.text[0], colors.text[1], colors.text[2]);
-        text(this.label, this.x, this.y + this.backgroundSize/2 + 15);
+        text(this.label, this.x, this.y + (this.backgroundSize/2 + 15) * scale);
         pop();
     }
 }
@@ -390,5 +449,48 @@ function mouseDragged() {
                 familyParticles[spouseIndex].y += dy;
             }
         }
+    }
+}
+
+class HeartParticle {
+    constructor() {
+        this.reset();
+    }
+    
+    reset() {
+        this.x = random(width);
+        this.y = random(height);
+        this.size = random(5, 15);
+        this.speed = random(0.2, 0.8);
+        this.angle = random(TWO_PI);
+        this.alpha = random(0.1, 0.3);
+    }
+    
+    update() {
+        this.y -= this.speed;
+        this.x += sin(frameCount * 0.05 + this.angle) * 0.5;
+        
+        if (this.y < -20) {
+            this.y = height + 20;
+            this.x = random(width);
+        }
+    }
+    
+    display() {
+        push();
+        translate(this.x, this.y);
+        noStroke();
+        fill(colors.gold[0], colors.gold[1], colors.gold[2], this.alpha);
+        
+        beginShape();
+        vertex(0, -this.size/2);
+        bezierVertex(this.size/2, -this.size, 
+                    this.size/2, 0, 
+                    0, this.size/2);
+        bezierVertex(-this.size/2, 0, 
+                    -this.size/2, -this.size, 
+                    0, -this.size/2);
+        endShape(CLOSE);
+        pop();
     }
 } 
