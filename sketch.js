@@ -13,7 +13,7 @@ let poemLines = [
     "A family tree that stands so tall."
 ];
 
-// Pastel color palette
+// Color palette
 const colors = {
     background: [30, 10, 98],  // Very light neutral
     parents: [0, 0, 0],        // Black
@@ -21,17 +21,16 @@ const colors = {
     daughters: [0, 0, 0],      // Black
     grandchildren: [0, 0, 0],  // Black
     text: [30, 30, 50],        // Muted brown
-    flower1: [340, 30, 90],    // Soft pink
-    flower2: [60, 30, 90],     // Soft yellow
-    flower3: [180, 30, 90],    // Soft blue
-    bird: [20, 30, 80]         // Soft brown
+    particle1: [340, 30, 90],  // Soft pink
+    particle2: [60, 30, 90],   // Soft yellow
+    particle3: [180, 30, 90]   // Soft blue
 };
 
 function setup() {
     createCanvas(800, 800);
     colorMode(HSB, 360, 100, 100, 1);
     
-    // Create initial particles with pastel colors
+    // Create initial particles
     for (let i = 0; i < 50; i++) {
         particles.push(new Particle());
     }
@@ -125,7 +124,7 @@ class Particle {
         this.size = random(5, 15);
         this.speed = random(0.5, 2);
         this.angle = random(TWO_PI);
-        this.hue = random([colors.flower1[0], colors.flower2[0], colors.flower3[0]]);
+        this.hue = random([colors.particle1[0], colors.particle2[0], colors.particle3[0]]);
         this.alpha = random(0.3, 0.8);
     }
     
