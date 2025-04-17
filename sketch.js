@@ -20,21 +20,19 @@ let offsetY = 0;
 
 // Color palette
 const colors = {
-    background: [30, 10, 98],  // Very light neutral
-    parents: [0, 0, 0],        // Black
-    sons: [0, 0, 0],           // Black
-    daughters: [0, 0, 0],      // Black
-    grandchildren: [0, 0, 0],  // Black
-    text: [30, 30, 50],        // Muted brown
+    background: [30, 10, 98],    // Very light neutral
+    man: [210, 70, 90],         // Blue
+    woman: [330, 70, 90],       // Pink
+    text: [30, 30, 50],         // Muted brown
     // Flower colors in HSB
-    flower1: [330, 60, 95],    // Pink
-    flower2: [280, 50, 95],    // Purple
-    flower3: [180, 50, 95],    // Turquoise
-    flower4: [50, 60, 95],     // Yellow
+    flower1: [330, 60, 95],     // Pink
+    flower2: [280, 50, 95],     // Purple
+    flower3: [180, 50, 95],     // Turquoise
+    flower4: [50, 60, 95],      // Yellow
     // Bird colors in HSB
-    bird1: [30, 50, 90],       // Warm brown
-    bird2: [200, 50, 95],      // Sky blue
-    bird3: [150, 50, 90]       // Sage green
+    bird1: [30, 50, 90],        // Warm brown
+    bird2: [200, 50, 95],       // Sky blue
+    bird3: [150, 50, 90]        // Sage green
 };
 
 function setup() {
@@ -48,17 +46,17 @@ function setup() {
     
     // Create family particles with smaller sizes
     // Parents (2)
-    familyParticles.push(new FamilyParticle(width/2, height/2, 20, colors.parents, 1, "Cecil & Indranie", "couple"));
+    familyParticles.push(new FamilyParticle(width/2, height/2, 20, colors.man, 1, "Cecil & Indranie", "couple"));
     // Sons and wives (4)
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 100, 15, colors.sons, 2, "Nick", "man"));
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 150, 15, colors.daughters, 2, "Krupa", "woman"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 100, 15, colors.sons, 2, "Chris", "man"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 150, 15, colors.daughters, 2, "Shalini", "woman"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 100, 15, colors.man, 2, "Nick", "man"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 150, 15, colors.woman, 2, "Krupa", "woman"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 100, 15, colors.man, 2, "Chris", "man"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 150, 15, colors.woman, 2, "Shalini", "woman"));
     // Grandchildren (4)
-    familyParticles.push(new FamilyParticle(width/2 - 150, height/2 - 200, 12, colors.grandchildren, 3, "Mason", "man"));
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 200, 12, colors.grandchildren, 3, "Owen", "man"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 200, 12, colors.grandchildren, 3, "Shriya", "woman"));
-    familyParticles.push(new FamilyParticle(width/2 + 150, height/2 - 200, 12, colors.grandchildren, 3, "Vishal", "man"));
+    familyParticles.push(new FamilyParticle(width/2 - 150, height/2 - 200, 12, colors.man, 3, "Mason", "man"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 200, 12, colors.man, 3, "Owen", "man"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 200, 12, colors.woman, 3, "Shriya", "woman"));
+    familyParticles.push(new FamilyParticle(width/2 + 150, height/2 - 200, 12, colors.man, 3, "Vishal", "man"));
 }
 
 function draw() {
@@ -231,7 +229,7 @@ class Particle {
 function drawMan(x, y, size) {
     push();
     translate(x, y);
-    stroke(0);
+    stroke(colors.man[0], colors.man[1], colors.man[2]);
     strokeWeight(2);
     noFill();
     
@@ -253,7 +251,7 @@ function drawMan(x, y, size) {
 function drawWoman(x, y, size) {
     push();
     translate(x, y);
-    stroke(0);
+    stroke(colors.woman[0], colors.woman[1], colors.woman[2]);
     strokeWeight(2);
     noFill();
     
@@ -272,7 +270,7 @@ function drawWoman(x, y, size) {
     
     // Dress
     noStroke();
-    fill(0);
+    fill(colors.woman[0], colors.woman[1], colors.woman[2]);
     triangle(-size/3, size/4, size/3, size/4, 0, size/2);
     pop();
 }
@@ -281,10 +279,10 @@ function drawCouple(x, y, size) {
     push();
     translate(x, y);
     
-    // Draw man
+    // Draw man (slightly to the left)
     drawMan(-size/4, 0, size);
     
-    // Draw woman
+    // Draw woman (slightly to the right)
     drawWoman(size/4, 0, size);
     pop();
 }
