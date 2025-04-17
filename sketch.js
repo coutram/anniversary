@@ -20,7 +20,11 @@ const colors = {
     sons: [30, 15, 85],        // Light taupe
     daughters: [30, 10, 80],   // Warm gray
     grandchildren: [30, 5, 75], // Soft gray
-    text: [30, 30, 50]         // Muted brown
+    text: [30, 30, 50],        // Muted brown
+    flower1: [340, 30, 90],    // Soft pink
+    flower2: [60, 30, 90],     // Soft yellow
+    flower3: [180, 30, 90],    // Soft blue
+    bird: [20, 30, 80]         // Soft brown
 };
 
 function setup() {
@@ -34,17 +38,17 @@ function setup() {
     
     // Create family particles
     // Parents (2)
-    familyParticles.push(new FamilyParticle(width/2, height/2, 20, colors.parents, 1, "Cecil & Indranie"));
+    familyParticles.push(new FamilyParticle(width/2, height/2, 30, colors.parents, 1, "Cecil & Indranie", "flower"));
     // Sons and wives (4)
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 100, 15, colors.sons, 2, "Nick"));
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 150, 15, colors.daughters, 2, "Krupa"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 100, 15, colors.sons, 2, "Chris"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 150, 15, colors.daughters, 2, "Shalini"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 100, 25, colors.sons, 2, "Nick", "bird"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 150, 25, colors.daughters, 2, "Krupa", "flower"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 100, 25, colors.sons, 2, "Chris", "bird"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 150, 25, colors.daughters, 2, "Shalini", "flower"));
     // Grandchildren (4)
-    familyParticles.push(new FamilyParticle(width/2 - 150, height/2 - 200, 10, colors.grandchildren, 3, "Mason"));
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 200, 10, colors.grandchildren, 3, "Owen"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 200, 10, colors.grandchildren, 3, "Shriya"));
-    familyParticles.push(new FamilyParticle(width/2 + 150, height/2 - 200, 10, colors.grandchildren, 3, "Vishal"));
+    familyParticles.push(new FamilyParticle(width/2 - 150, height/2 - 200, 20, colors.grandchildren, 3, "Mason", "bird"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 200, 20, colors.grandchildren, 3, "Owen", "bird"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 200, 20, colors.grandchildren, 3, "Shriya", "flower"));
+    familyParticles.push(new FamilyParticle(width/2 + 150, height/2 - 200, 20, colors.grandchildren, 3, "Vishal", "bird"));
 }
 
 function draw() {
@@ -121,7 +125,10 @@ class Particle {
         this.size = random(5, 15);
         this.speed = random(0.5, 2);
         this.angle = random(TWO_PI);
-        this.hue = random(20, 40); // Neutral pastel range
+        this.type = random() < 0.5 ? 'flower' : 'bird';
+        this.hue = this.type === 'flower' ? 
+            random([colors.flower1[0], colors.flower2[0], colors.flower3[0]]) : 
+            colors.bird[0];
         this.alpha = random(0.3, 0.8);
     }
     
@@ -136,28 +143,72 @@ class Particle {
     }
     
     display() {
-        noStroke();
-        fill(this.hue, 20, 90, this.alpha); // Pastel version
-        ellipse(this.x, this.y, this.size);
+        if (this.type === 'flower') {
+            drawFlower(this.x, this.y, this.size, this.hue, this.alpha);
+        } else {
+            drawBird(this.x, this.y, this.size, this.hue, this.alpha);
+        }
     }
 }
 
+function drawFlower(x, y, size, hue, alpha) {
+    push();
+    translate(x, y);
+    noStroke();
+    
+    // Petals
+    for (let i = 0; i < 5; i++) {
+        fill(hue, 30, 90, alpha);
+        rotate(TWO_PI / 5);
+        ellipse(0, -size/2, size, size/2);
+    }
+    
+    // Center
+    fill(hue, 50, 80, alpha);
+    ellipse(0, 0, size/2, size/2);
+    pop();
+}
+
+function drawBird(x, y, size, hue, alpha) {
+    push();
+    translate(x, y);
+    noStroke();
+    
+    // Body
+    fill(hue, 30, 80, alpha);
+    ellipse(0, 0, size, size/1.5);
+    
+    // Head
+    ellipse(-size/2, -size/4, size/2, size/2);
+    
+    // Beak
+    fill(hue, 50, 60, alpha);
+    triangle(-size/2 - size/4, -size/4, -size/2 - size/2, -size/4, -size/2 - size/4, 0);
+    
+    // Wing
+    fill(hue, 20, 70, alpha);
+    ellipse(size/4, 0, size/2, size/3);
+    pop();
+}
+
 class FamilyParticle {
-    constructor(x, y, size, color, generation, label) {
+    constructor(x, y, size, color, generation, label, type) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.color = color;
         this.generation = generation;
         this.label = label;
+        this.type = type;
         this.angle = 0;
     }
     
     display() {
-        // Draw particle
-        noStroke();
-        fill(this.color[0], this.color[1], this.color[2], 0.8);
-        ellipse(this.x, this.y, this.size);
+        if (this.type === 'flower') {
+            drawFlower(this.x, this.y, this.size, this.color[0], 0.8);
+        } else {
+            drawBird(this.x, this.y, this.size, this.color[0], 0.8);
+        }
         
         // Draw label
         push();
