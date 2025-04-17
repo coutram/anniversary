@@ -125,10 +125,7 @@ class Particle {
         this.size = random(5, 15);
         this.speed = random(0.5, 2);
         this.angle = random(TWO_PI);
-        this.type = random() < 0.5 ? 'flower' : 'bird';
-        this.hue = this.type === 'flower' ? 
-            random([colors.flower1[0], colors.flower2[0], colors.flower3[0]]) : 
-            colors.bird[0];
+        this.hue = random([colors.flower1[0], colors.flower2[0], colors.flower3[0]]);
         this.alpha = random(0.3, 0.8);
     }
     
@@ -143,11 +140,9 @@ class Particle {
     }
     
     display() {
-        if (this.type === 'flower') {
-            drawFlower(this.x, this.y, this.size, this.hue, this.alpha);
-        } else {
-            drawBird(this.x, this.y, this.size, this.hue, this.alpha);
-        }
+        noStroke();
+        fill(this.hue, 30, 90, this.alpha);
+        ellipse(this.x, this.y, this.size);
     }
 }
 
