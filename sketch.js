@@ -13,6 +13,11 @@ let poemLines = [
     "A family tree that stands so tall."
 ];
 
+// Add these variables at the top of the file
+let selectedParticle = null;
+let offsetX = 0;
+let offsetY = 0;
+
 // Color palette
 const colors = {
     background: [30, 10, 98],  // Very light neutral
@@ -65,18 +70,33 @@ function draw() {
         particle.display();
     }
     
-    // Display family particles and connections
+    // Draw connecting lines between family members
+    drawFamilyConnections();
+    
+    // Display family particles
     for (let particle of familyParticles) {
         particle.display();
     }
-    
-    // Draw connecting lines between family members
-    drawFamilyConnections();
     
     // Draw poem
     drawPoem();
     
     time += 0.01;
+    
+    // Add cursor styling
+    if (selectedParticle) {
+        cursor('grabbing');
+    } else {
+        let overParticle = false;
+        for (let particle of familyParticles) {
+            let d = dist(mouseX, mouseY, particle.x, particle.y);
+            if (d < particle.backgroundSize / 2) {
+                overParticle = true;
+                break;
+            }
+        }
+        cursor(overParticle ? 'grab' : 'default');
+    }
 }
 
 function drawPoem() {
@@ -307,5 +327,70 @@ class FamilyParticle {
         fill(colors.text[0], colors.text[1], colors.text[2]);
         text(this.label, this.x, this.y + this.backgroundSize/2 + 15);
         pop();
+    }
+}
+
+function mousePressed() {
+    // Check if we clicked on any family particle
+    for (let particle of familyParticles) {
+        let d = dist(mouseX, mouseY, particle.x, particle.y);
+        if (d < particle.backgroundSize / 2) {
+            selectedParticle = particle;
+            offsetX = particle.x - mouseX;
+            offsetY = particle.y - mouseY;
+            break;
+        }
+    }
+}
+
+function mouseReleased() {
+    selectedParticle = null;
+}
+
+function mouseDragged() {
+    if (selectedParticle) {
+        // Calculate new position
+        let newX = mouseX + offsetX;
+        let newY = mouseY + offsetY;
+        
+        // Get the movement delta
+        let dx = newX - selectedParticle.x;
+        let dy = newY - selectedParticle.y;
+        
+        // Move the selected particle
+        selectedParticle.x = newX;
+        selectedParticle.y = newY;
+        
+        // Move connected family members to maintain structure
+        if (selectedParticle.generation === 1) {
+            // If parents are moved, move everyone
+            for (let particle of familyParticles) {
+                if (particle !== selectedParticle) {
+                    particle.x += dx;
+                    particle.y += dy;
+                }
+            }
+        } else if (selectedParticle.generation === 2) {
+            // If a son or wife is moved, move their children
+            let startIndex = (selectedParticle === familyParticles[1] || selectedParticle === familyParticles[2]) ? 5 : 7;
+            let endIndex = startIndex + 2;
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                familyParticles[i].x += dx;
+                familyParticles[i].y += dy;
+            }
+            
+            // Move spouse together
+            let spouseIndex = -1;
+            if (selectedParticle === familyParticles[1]) spouseIndex = 2;
+            if (selectedParticle === familyParticles[2]) spouseIndex = 1;
+            if (selectedParticle === familyParticles[3]) spouseIndex = 4;
+            if (selectedParticle === familyParticles[4]) spouseIndex = 3;
+            
+            if (spouseIndex !== -1) {
+                familyParticles[spouseIndex].x += dx;
+                familyParticles[spouseIndex].y += dy;
+            }
+        }
     }
 } 
