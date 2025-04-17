@@ -16,10 +16,10 @@ let poemLines = [
 // Pastel color palette
 const colors = {
     background: [30, 10, 98],  // Very light neutral
-    parents: [30, 20, 90],     // Soft beige
-    sons: [30, 15, 85],        // Light taupe
-    daughters: [30, 10, 80],   // Warm gray
-    grandchildren: [30, 5, 75], // Soft gray
+    parents: [0, 0, 0],        // Black
+    sons: [0, 0, 0],           // Black
+    daughters: [0, 0, 0],      // Black
+    grandchildren: [0, 0, 0],  // Black
     text: [30, 30, 50],        // Muted brown
     flower1: [340, 30, 90],    // Soft pink
     flower2: [60, 30, 90],     // Soft yellow
@@ -38,17 +38,17 @@ function setup() {
     
     // Create family particles
     // Parents (2)
-    familyParticles.push(new FamilyParticle(width/2, height/2, 30, colors.parents, 1, "Cecil & Indranie", "flower"));
+    familyParticles.push(new FamilyParticle(width/2, height/2, 30, colors.parents, 1, "Cecil & Indranie", "couple"));
     // Sons and wives (4)
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 100, 25, colors.sons, 2, "Nick", "bird"));
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 150, 25, colors.daughters, 2, "Krupa", "flower"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 100, 25, colors.sons, 2, "Chris", "bird"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 150, 25, colors.daughters, 2, "Shalini", "flower"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 100, 25, colors.sons, 2, "Nick", "man"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 150, 25, colors.daughters, 2, "Krupa", "woman"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 100, 25, colors.sons, 2, "Chris", "man"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 150, 25, colors.daughters, 2, "Shalini", "woman"));
     // Grandchildren (4)
-    familyParticles.push(new FamilyParticle(width/2 - 150, height/2 - 200, 20, colors.grandchildren, 3, "Mason", "bird"));
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 200, 20, colors.grandchildren, 3, "Owen", "bird"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 200, 20, colors.grandchildren, 3, "Shriya", "flower"));
-    familyParticles.push(new FamilyParticle(width/2 + 150, height/2 - 200, 20, colors.grandchildren, 3, "Vishal", "bird"));
+    familyParticles.push(new FamilyParticle(width/2 - 150, height/2 - 200, 20, colors.grandchildren, 3, "Mason", "man"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 200, 20, colors.grandchildren, 3, "Owen", "man"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 200, 20, colors.grandchildren, 3, "Shriya", "woman"));
+    familyParticles.push(new FamilyParticle(width/2 + 150, height/2 - 200, 20, colors.grandchildren, 3, "Vishal", "man"));
 }
 
 function draw() {
@@ -92,7 +92,7 @@ function drawPoem() {
 function drawFamilyConnections() {
     // Connect parents to sons
     for (let i = 1; i <= 4; i++) {
-        stroke(colors.parents[0], colors.parents[1], colors.parents[2], 0.3);
+        stroke(0, 0, 0, 0.3);
         line(familyParticles[0].x, familyParticles[0].y, 
              familyParticles[i].x, familyParticles[i].y);
     }
@@ -100,14 +100,14 @@ function drawFamilyConnections() {
     // Connect sons to grandchildren
     for (let i = 1; i <= 2; i++) {
         for (let j = 5; j <= 6; j++) {
-            stroke(colors.sons[0], colors.sons[1], colors.sons[2], 0.2);
+            stroke(0, 0, 0, 0.2);
             line(familyParticles[i].x, familyParticles[i].y, 
                  familyParticles[j].x, familyParticles[j].y);
         }
     }
     for (let i = 3; i <= 4; i++) {
         for (let j = 7; j <= 8; j++) {
-            stroke(colors.sons[0], colors.sons[1], colors.sons[2], 0.2);
+            stroke(0, 0, 0, 0.2);
             line(familyParticles[i].x, familyParticles[i].y, 
                  familyParticles[j].x, familyParticles[j].y);
         }
@@ -151,43 +151,64 @@ class Particle {
     }
 }
 
-function drawFlower(x, y, size, hue, alpha) {
+function drawMan(x, y, size) {
     push();
     translate(x, y);
-    noStroke();
+    stroke(0);
+    strokeWeight(2);
+    noFill();
     
-    // Petals
-    for (let i = 0; i < 5; i++) {
-        fill(hue, 30, 90, alpha);
-        rotate(TWO_PI / 5);
-        ellipse(0, -size/2, size, size/2);
-    }
+    // Head
+    ellipse(0, -size/2, size/2, size/2);
     
-    // Center
-    fill(hue, 50, 80, alpha);
-    ellipse(0, 0, size/2, size/2);
+    // Body
+    line(0, -size/4, 0, size/4);
+    
+    // Arms
+    line(-size/3, 0, size/3, 0);
+    
+    // Legs
+    line(0, size/4, -size/3, size/2);
+    line(0, size/4, size/3, size/2);
     pop();
 }
 
-function drawBird(x, y, size, hue, alpha) {
+function drawWoman(x, y, size) {
     push();
     translate(x, y);
-    noStroke();
-    
-    // Body
-    fill(hue, 30, 80, alpha);
-    ellipse(0, 0, size, size/1.5);
+    stroke(0);
+    strokeWeight(2);
+    noFill();
     
     // Head
-    ellipse(-size/2, -size/4, size/2, size/2);
+    ellipse(0, -size/2, size/2, size/2);
     
-    // Beak
-    fill(hue, 50, 60, alpha);
-    triangle(-size/2 - size/4, -size/4, -size/2 - size/2, -size/4, -size/2 - size/4, 0);
+    // Body
+    line(0, -size/4, 0, size/4);
     
-    // Wing
-    fill(hue, 20, 70, alpha);
-    ellipse(size/4, 0, size/2, size/3);
+    // Arms
+    line(-size/3, 0, size/3, 0);
+    
+    // Legs
+    line(0, size/4, -size/3, size/2);
+    line(0, size/4, size/3, size/2);
+    
+    // Dress
+    noStroke();
+    fill(0);
+    triangle(-size/3, size/4, size/3, size/4, 0, size/2);
+    pop();
+}
+
+function drawCouple(x, y, size) {
+    push();
+    translate(x, y);
+    
+    // Draw man
+    drawMan(-size/4, 0, size);
+    
+    // Draw woman
+    drawWoman(size/4, 0, size);
     pop();
 }
 
@@ -204,10 +225,12 @@ class FamilyParticle {
     }
     
     display() {
-        if (this.type === 'flower') {
-            drawFlower(this.x, this.y, this.size, this.color[0], 0.8);
-        } else {
-            drawBird(this.x, this.y, this.size, this.color[0], 0.8);
+        if (this.type === 'couple') {
+            drawCouple(this.x, this.y, this.size);
+        } else if (this.type === 'man') {
+            drawMan(this.x, this.y, this.size);
+        } else if (this.type === 'woman') {
+            drawWoman(this.x, this.y, this.size);
         }
         
         // Draw label
