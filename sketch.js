@@ -154,7 +154,7 @@ function drawPoem() {
     fill(colors.text[0], colors.text[1], colors.text[2]);
     noStroke();
     
-    let y = height - 200;
+    let y = height - 250;
     for (let line of poemLines) {
         text(line, width/2, y);
         y += 25;
