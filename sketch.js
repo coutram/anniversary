@@ -351,38 +351,38 @@ class FamilyParticle {
         this.backgroundSize = this.size * 1.8;
     }
     
-    display(scale = 1) {
+    display(breathingScale = 1) {
         // Draw white background circle with subtle glow
         push();
         noStroke();
         fill(0, 0, 100, 1);
-        ellipse(this.x, this.y, this.backgroundSize * scale, this.backgroundSize * scale);
+        ellipse(this.x, this.y, this.backgroundSize * breathingScale, this.backgroundSize * breathingScale);
         
         // Add subtle glow
         for(let i = 3; i > 0; i--) {
             fill(0, 0, 100, 0.1);
-            ellipse(this.x, this.y, (this.backgroundSize + i*5) * scale, (this.backgroundSize + i*5) * scale);
+            ellipse(this.x, this.y, (this.backgroundSize + i*5) * breathingScale, (this.backgroundSize + i*5) * breathingScale);
         }
         pop();
         
-        // Draw the icon with scaling
+        // Draw the icon
         push();
-        scale(scale);
+        translate(this.x, this.y);
         if (this.type === 'couple') {
-            drawCouple(this.x/scale, this.y/scale, this.size);
+            drawCouple(0, 0, this.size * breathingScale);
         } else if (this.type === 'man') {
-            drawMan(this.x/scale, this.y/scale, this.size);
+            drawMan(0, 0, this.size * breathingScale);
         } else if (this.type === 'woman') {
-            drawWoman(this.x/scale, this.y/scale, this.size);
+            drawWoman(0, 0, this.size * breathingScale);
         }
         pop();
         
         // Draw label
         push();
         textAlign(CENTER);
-        textSize(12 * scale);
+        textSize(12 * breathingScale);
         fill(colors.text[0], colors.text[1], colors.text[2]);
-        text(this.label, this.x, this.y + (this.backgroundSize/2 + 15) * scale);
+        text(this.label, this.x, this.y + (this.backgroundSize/2 + 15) * breathingScale);
         pop();
     }
 }
