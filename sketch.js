@@ -221,10 +221,10 @@ class FamilyParticle {
     }
     
     display() {
-        // Draw white background circle
+        // Draw white background circle with HSB values
         push();
         noStroke();
-        fill(255, 255, 255, 1); // Fully opaque white
+        fill(0, 0, 100, 1); // Pure white in HSB (hue=0, saturation=0, brightness=100, alpha=1)
         ellipse(this.x, this.y, this.backgroundSize, this.backgroundSize);
         pop();
         
