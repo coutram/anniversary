@@ -35,19 +35,19 @@ function setup() {
         particles.push(new Particle());
     }
     
-    // Create family particles
+    // Create family particles with smaller sizes
     // Parents (2)
-    familyParticles.push(new FamilyParticle(width/2, height/2, 30, colors.parents, 1, "Cecil & Indranie", "couple"));
+    familyParticles.push(new FamilyParticle(width/2, height/2, 20, colors.parents, 1, "Cecil & Indranie", "couple"));
     // Sons and wives (4)
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 100, 25, colors.sons, 2, "Nick", "man"));
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 150, 25, colors.daughters, 2, "Krupa", "woman"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 100, 25, colors.sons, 2, "Chris", "man"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 150, 25, colors.daughters, 2, "Shalini", "woman"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 100, 15, colors.sons, 2, "Nick", "man"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 150, 15, colors.daughters, 2, "Krupa", "woman"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 100, 15, colors.sons, 2, "Chris", "man"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 150, 15, colors.daughters, 2, "Shalini", "woman"));
     // Grandchildren (4)
-    familyParticles.push(new FamilyParticle(width/2 - 150, height/2 - 200, 20, colors.grandchildren, 3, "Mason", "man"));
-    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 200, 20, colors.grandchildren, 3, "Owen", "man"));
-    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 200, 20, colors.grandchildren, 3, "Shriya", "woman"));
-    familyParticles.push(new FamilyParticle(width/2 + 150, height/2 - 200, 20, colors.grandchildren, 3, "Vishal", "man"));
+    familyParticles.push(new FamilyParticle(width/2 - 150, height/2 - 200, 12, colors.grandchildren, 3, "Mason", "man"));
+    familyParticles.push(new FamilyParticle(width/2 - 100, height/2 - 200, 12, colors.grandchildren, 3, "Owen", "man"));
+    familyParticles.push(new FamilyParticle(width/2 + 100, height/2 - 200, 12, colors.grandchildren, 3, "Shriya", "woman"));
+    familyParticles.push(new FamilyParticle(width/2 + 150, height/2 - 200, 12, colors.grandchildren, 3, "Vishal", "man"));
 }
 
 function draw() {
@@ -217,14 +217,14 @@ class FamilyParticle {
         this.type = type;
         this.angle = 0;
         // Add padding around the icon
-        this.backgroundSize = this.size * 1.5;
+        this.backgroundSize = this.size * 1.8;
     }
     
     display() {
         // Draw white background circle
         push();
         noStroke();
-        fill(255); // White
+        fill(255, 255, 255, 1); // Fully opaque white
         ellipse(this.x, this.y, this.backgroundSize, this.backgroundSize);
         pop();
         
